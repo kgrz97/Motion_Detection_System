@@ -1,0 +1,562 @@
+
+Wykrywacz_ruchu.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000041c  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000007a  00800060  0000041c  000004b0  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000008  008000da  008000da  0000052a  2**0
+                  ALLOC
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	70 c1       	rjmp	.+736    	; 0x2e4 <__vector_1>
+   4:	2b c0       	rjmp	.+86     	; 0x5c <__bad_interrupt>
+   6:	2a c0       	rjmp	.+84     	; 0x5c <__bad_interrupt>
+   8:	15 c1       	rjmp	.+554    	; 0x234 <__vector_4>
+   a:	28 c0       	rjmp	.+80     	; 0x5c <__bad_interrupt>
+   c:	27 c0       	rjmp	.+78     	; 0x5c <__bad_interrupt>
+   e:	26 c0       	rjmp	.+76     	; 0x5c <__bad_interrupt>
+  10:	25 c0       	rjmp	.+74     	; 0x5c <__bad_interrupt>
+  12:	24 c0       	rjmp	.+72     	; 0x5c <__bad_interrupt>
+  14:	23 c0       	rjmp	.+70     	; 0x5c <__bad_interrupt>
+  16:	22 c0       	rjmp	.+68     	; 0x5c <__bad_interrupt>
+  18:	21 c0       	rjmp	.+66     	; 0x5c <__bad_interrupt>
+  1a:	20 c0       	rjmp	.+64     	; 0x5c <__bad_interrupt>
+  1c:	1f c0       	rjmp	.+62     	; 0x5c <__bad_interrupt>
+  1e:	1e c0       	rjmp	.+60     	; 0x5c <__bad_interrupt>
+  20:	1d c0       	rjmp	.+58     	; 0x5c <__bad_interrupt>
+  22:	1c c0       	rjmp	.+56     	; 0x5c <__bad_interrupt>
+  24:	1b c0       	rjmp	.+54     	; 0x5c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	ec e1       	ldi	r30, 0x1C	; 28
+  3a:	f4 e0       	ldi	r31, 0x04	; 4
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <.do_copy_data_start>
+
+0000003e <.do_copy_data_loop>:
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+
+00000042 <.do_copy_data_start>:
+  42:	aa 3d       	cpi	r26, 0xDA	; 218
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <.do_copy_data_loop>
+
+00000048 <__do_clear_bss>:
+  48:	10 e0       	ldi	r17, 0x00	; 0
+  4a:	aa ed       	ldi	r26, 0xDA	; 218
+  4c:	b0 e0       	ldi	r27, 0x00	; 0
+  4e:	01 c0       	rjmp	.+2      	; 0x52 <.do_clear_bss_start>
+
+00000050 <.do_clear_bss_loop>:
+  50:	1d 92       	st	X+, r1
+
+00000052 <.do_clear_bss_start>:
+  52:	a2 3e       	cpi	r26, 0xE2	; 226
+  54:	b1 07       	cpc	r27, r17
+  56:	e1 f7       	brne	.-8      	; 0x50 <.do_clear_bss_loop>
+  58:	99 d1       	rcall	.+818    	; 0x38c <main>
+  5a:	de c1       	rjmp	.+956    	; 0x418 <_exit>
+
+0000005c <__bad_interrupt>:
+  5c:	d1 cf       	rjmp	.-94     	; 0x0 <__vectors>
+
+0000005e <USART_Init>:
+  5e:	90 bd       	out	0x20, r25	; 32
+  60:	89 b9       	out	0x09, r24	; 9
+  62:	88 e0       	ldi	r24, 0x08	; 8
+  64:	8a b9       	out	0x0a, r24	; 10
+  66:	86 e8       	ldi	r24, 0x86	; 134
+  68:	80 bd       	out	0x20, r24	; 32
+  6a:	08 95       	ret
+
+0000006c <USART_Off>:
+  6c:	53 98       	cbi	0x0a, 3	; 10
+  6e:	08 95       	ret
+
+00000070 <Usart_Transmit>:
+  70:	5d 9b       	sbis	0x0b, 5	; 11
+  72:	fe cf       	rjmp	.-4      	; 0x70 <Usart_Transmit>
+  74:	8c b9       	out	0x0c, r24	; 12
+  76:	08 95       	ret
+
+00000078 <Send_clause>:
+  78:	fc 01       	movw	r30, r24
+  7a:	04 c0       	rjmp	.+8      	; 0x84 <Send_clause+0xc>
+  7c:	5d 9b       	sbis	0x0b, 5	; 11
+  7e:	fe cf       	rjmp	.-4      	; 0x7c <Send_clause+0x4>
+  80:	31 96       	adiw	r30, 0x01	; 1
+  82:	8c b9       	out	0x0c, r24	; 12
+  84:	80 81       	ld	r24, Z
+  86:	88 23       	and	r24, r24
+  88:	c9 f7       	brne	.-14     	; 0x7c <Send_clause+0x4>
+  8a:	08 95       	ret
+
+0000008c <sendSMS>:
+  8c:	cf 93       	push	r28
+  8e:	df 93       	push	r29
+  90:	ec 01       	movw	r28, r24
+  92:	80 e1       	ldi	r24, 0x10	; 16
+  94:	97 e2       	ldi	r25, 0x27	; 39
+  96:	22 e3       	ldi	r18, 0x32	; 50
+  98:	30 e0       	ldi	r19, 0x00	; 0
+  9a:	f9 01       	movw	r30, r18
+  9c:	31 97       	sbiw	r30, 0x01	; 1
+  9e:	f1 f7       	brne	.-4      	; 0x9c <sendSMS+0x10>
+  a0:	01 97       	sbiw	r24, 0x01	; 1
+  a2:	d9 f7       	brne	.-10     	; 0x9a <sendSMS+0xe>
+  a4:	80 e6       	ldi	r24, 0x60	; 96
+  a6:	90 e0       	ldi	r25, 0x00	; 0
+  a8:	e7 df       	rcall	.-50     	; 0x78 <Send_clause>
+  aa:	80 e1       	ldi	r24, 0x10	; 16
+  ac:	97 e2       	ldi	r25, 0x27	; 39
+  ae:	22 e3       	ldi	r18, 0x32	; 50
+  b0:	30 e0       	ldi	r19, 0x00	; 0
+  b2:	f9 01       	movw	r30, r18
+  b4:	31 97       	sbiw	r30, 0x01	; 1
+  b6:	f1 f7       	brne	.-4      	; 0xb4 <sendSMS+0x28>
+  b8:	01 97       	sbiw	r24, 0x01	; 1
+  ba:	d9 f7       	brne	.-10     	; 0xb2 <sendSMS+0x26>
+  bc:	85 e6       	ldi	r24, 0x65	; 101
+  be:	90 e0       	ldi	r25, 0x00	; 0
+  c0:	db df       	rcall	.-74     	; 0x78 <Send_clause>
+  c2:	80 e1       	ldi	r24, 0x10	; 16
+  c4:	97 e2       	ldi	r25, 0x27	; 39
+  c6:	22 e3       	ldi	r18, 0x32	; 50
+  c8:	30 e0       	ldi	r19, 0x00	; 0
+  ca:	f9 01       	movw	r30, r18
+  cc:	31 97       	sbiw	r30, 0x01	; 1
+  ce:	f1 f7       	brne	.-4      	; 0xcc <sendSMS+0x40>
+  d0:	01 97       	sbiw	r24, 0x01	; 1
+  d2:	d9 f7       	brne	.-10     	; 0xca <sendSMS+0x3e>
+  d4:	81 e7       	ldi	r24, 0x71	; 113
+  d6:	90 e0       	ldi	r25, 0x00	; 0
+  d8:	cf df       	rcall	.-98     	; 0x78 <Send_clause>
+  da:	80 e1       	ldi	r24, 0x10	; 16
+  dc:	97 e2       	ldi	r25, 0x27	; 39
+  de:	22 e3       	ldi	r18, 0x32	; 50
+  e0:	30 e0       	ldi	r19, 0x00	; 0
+  e2:	f9 01       	movw	r30, r18
+  e4:	31 97       	sbiw	r30, 0x01	; 1
+  e6:	f1 f7       	brne	.-4      	; 0xe4 <sendSMS+0x58>
+  e8:	01 97       	sbiw	r24, 0x01	; 1
+  ea:	d9 f7       	brne	.-10     	; 0xe2 <sendSMS+0x56>
+  ec:	ce 01       	movw	r24, r28
+  ee:	c4 df       	rcall	.-120    	; 0x78 <Send_clause>
+  f0:	80 e1       	ldi	r24, 0x10	; 16
+  f2:	97 e2       	ldi	r25, 0x27	; 39
+  f4:	22 e3       	ldi	r18, 0x32	; 50
+  f6:	30 e0       	ldi	r19, 0x00	; 0
+  f8:	f9 01       	movw	r30, r18
+  fa:	31 97       	sbiw	r30, 0x01	; 1
+  fc:	f1 f7       	brne	.-4      	; 0xfa <sendSMS+0x6e>
+  fe:	01 97       	sbiw	r24, 0x01	; 1
+ 100:	d9 f7       	brne	.-10     	; 0xf8 <sendSMS+0x6c>
+ 102:	5d 9b       	sbis	0x0b, 5	; 11
+ 104:	fe cf       	rjmp	.-4      	; 0x102 <sendSMS+0x76>
+ 106:	8a e1       	ldi	r24, 0x1A	; 26
+ 108:	8c b9       	out	0x0c, r24	; 12
+ 10a:	80 e2       	ldi	r24, 0x20	; 32
+ 10c:	9e e4       	ldi	r25, 0x4E	; 78
+ 10e:	22 e3       	ldi	r18, 0x32	; 50
+ 110:	30 e0       	ldi	r19, 0x00	; 0
+ 112:	f9 01       	movw	r30, r18
+ 114:	31 97       	sbiw	r30, 0x01	; 1
+ 116:	f1 f7       	brne	.-4      	; 0x114 <sendSMS+0x88>
+ 118:	01 97       	sbiw	r24, 0x01	; 1
+ 11a:	d9 f7       	brne	.-10     	; 0x112 <sendSMS+0x86>
+ 11c:	df 91       	pop	r29
+ 11e:	cf 91       	pop	r28
+ 120:	08 95       	ret
+
+00000122 <Delay>:
+ 122:	81 30       	cpi	r24, 0x01	; 1
+ 124:	91 05       	cpc	r25, r1
+ 126:	69 f4       	brne	.+26     	; 0x142 <Delay+0x20>
+ 128:	80 e0       	ldi	r24, 0x00	; 0
+ 12a:	90 e0       	ldi	r25, 0x00	; 0
+ 12c:	28 ea       	ldi	r18, 0xA8	; 168
+ 12e:	31 e6       	ldi	r19, 0x61	; 97
+ 130:	f9 01       	movw	r30, r18
+ 132:	31 97       	sbiw	r30, 0x01	; 1
+ 134:	f1 f7       	brne	.-4      	; 0x132 <Delay+0x10>
+ 136:	01 96       	adiw	r24, 0x01	; 1
+ 138:	44 e0       	ldi	r20, 0x04	; 4
+ 13a:	80 3b       	cpi	r24, 0xB0	; 176
+ 13c:	94 07       	cpc	r25, r20
+ 13e:	c1 f7       	brne	.-16     	; 0x130 <Delay+0xe>
+ 140:	08 95       	ret
+ 142:	82 30       	cpi	r24, 0x02	; 2
+ 144:	91 05       	cpc	r25, r1
+ 146:	69 f4       	brne	.+26     	; 0x162 <Delay+0x40>
+ 148:	80 e0       	ldi	r24, 0x00	; 0
+ 14a:	90 e0       	ldi	r25, 0x00	; 0
+ 14c:	28 ea       	ldi	r18, 0xA8	; 168
+ 14e:	31 e6       	ldi	r19, 0x61	; 97
+ 150:	f9 01       	movw	r30, r18
+ 152:	31 97       	sbiw	r30, 0x01	; 1
+ 154:	f1 f7       	brne	.-4      	; 0x152 <Delay+0x30>
+ 156:	01 96       	adiw	r24, 0x01	; 1
+ 158:	41 e0       	ldi	r20, 0x01	; 1
+ 15a:	84 3f       	cpi	r24, 0xF4	; 244
+ 15c:	94 07       	cpc	r25, r20
+ 15e:	c1 f7       	brne	.-16     	; 0x150 <Delay+0x2e>
+ 160:	08 95       	ret
+ 162:	03 97       	sbiw	r24, 0x03	; 3
+ 164:	61 f4       	brne	.+24     	; 0x17e <Delay+0x5c>
+ 166:	80 e0       	ldi	r24, 0x00	; 0
+ 168:	90 e0       	ldi	r25, 0x00	; 0
+ 16a:	28 ea       	ldi	r18, 0xA8	; 168
+ 16c:	31 e6       	ldi	r19, 0x61	; 97
+ 16e:	f9 01       	movw	r30, r18
+ 170:	31 97       	sbiw	r30, 0x01	; 1
+ 172:	f1 f7       	brne	.-4      	; 0x170 <Delay+0x4e>
+ 174:	01 96       	adiw	r24, 0x01	; 1
+ 176:	41 e0       	ldi	r20, 0x01	; 1
+ 178:	8c 32       	cpi	r24, 0x2C	; 44
+ 17a:	94 07       	cpc	r25, r20
+ 17c:	c1 f7       	brne	.-16     	; 0x16e <Delay+0x4c>
+ 17e:	08 95       	ret
+
+00000180 <Initialization_GSM>:
+ 180:	0f 93       	push	r16
+ 182:	1f 93       	push	r17
+ 184:	cf 93       	push	r28
+ 186:	df 93       	push	r29
+ 188:	c0 e0       	ldi	r28, 0x00	; 0
+ 18a:	d0 e0       	ldi	r29, 0x00	; 0
+ 18c:	02 e3       	ldi	r16, 0x32	; 50
+ 18e:	10 e0       	ldi	r17, 0x00	; 0
+ 190:	80 e6       	ldi	r24, 0x60	; 96
+ 192:	90 e0       	ldi	r25, 0x00	; 0
+ 194:	71 df       	rcall	.-286    	; 0x78 <Send_clause>
+ 196:	80 e4       	ldi	r24, 0x40	; 64
+ 198:	9f e1       	ldi	r25, 0x1F	; 31
+ 19a:	f8 01       	movw	r30, r16
+ 19c:	31 97       	sbiw	r30, 0x01	; 1
+ 19e:	f1 f7       	brne	.-4      	; 0x19c <Initialization_GSM+0x1c>
+ 1a0:	01 97       	sbiw	r24, 0x01	; 1
+ 1a2:	d9 f7       	brne	.-10     	; 0x19a <Initialization_GSM+0x1a>
+ 1a4:	21 96       	adiw	r28, 0x01	; 1
+ 1a6:	ca 30       	cpi	r28, 0x0A	; 10
+ 1a8:	d1 05       	cpc	r29, r1
+ 1aa:	91 f7       	brne	.-28     	; 0x190 <Initialization_GSM+0x10>
+ 1ac:	df 91       	pop	r29
+ 1ae:	cf 91       	pop	r28
+ 1b0:	1f 91       	pop	r17
+ 1b2:	0f 91       	pop	r16
+ 1b4:	08 95       	ret
+
+000001b6 <CheckBattery>:
+ 1b6:	47 98       	cbi	0x08, 7	; 8
+ 1b8:	80 91 e1 00 	lds	r24, 0x00E1
+ 1bc:	86 b9       	out	0x06, r24	; 6
+ 1be:	40 e0       	ldi	r20, 0x00	; 0
+ 1c0:	50 e0       	ldi	r21, 0x00	; 0
+ 1c2:	20 e0       	ldi	r18, 0x00	; 0
+ 1c4:	30 e0       	ldi	r19, 0x00	; 0
+ 1c6:	36 9a       	sbi	0x06, 6	; 6
+ 1c8:	36 99       	sbic	0x06, 6	; 6
+ 1ca:	fe cf       	rjmp	.-4      	; 0x1c8 <CheckBattery+0x12>
+ 1cc:	84 b1       	in	r24, 0x04	; 4
+ 1ce:	95 b1       	in	r25, 0x05	; 5
+ 1d0:	48 0f       	add	r20, r24
+ 1d2:	59 1f       	adc	r21, r25
+ 1d4:	2f 5f       	subi	r18, 0xFF	; 255
+ 1d6:	3f 4f       	sbci	r19, 0xFF	; 255
+ 1d8:	23 30       	cpi	r18, 0x03	; 3
+ 1da:	31 05       	cpc	r19, r1
+ 1dc:	a1 f7       	brne	.-24     	; 0x1c6 <CheckBattery+0x10>
+ 1de:	48 56       	subi	r20, 0x68	; 104
+ 1e0:	5a 40       	sbci	r21, 0x0A	; 10
+ 1e2:	a4 f4       	brge	.+40     	; 0x20c <CheckBattery+0x56>
+ 1e4:	10 bc       	out	0x20, r1	; 32
+ 1e6:	8c e0       	ldi	r24, 0x0C	; 12
+ 1e8:	89 b9       	out	0x09, r24	; 9
+ 1ea:	88 e0       	ldi	r24, 0x08	; 8
+ 1ec:	8a b9       	out	0x0a, r24	; 10
+ 1ee:	86 e8       	ldi	r24, 0x86	; 134
+ 1f0:	80 bd       	out	0x20, r24	; 32
+ 1f2:	c0 98       	cbi	0x18, 0	; 24
+ 1f4:	82 e0       	ldi	r24, 0x02	; 2
+ 1f6:	90 e0       	ldi	r25, 0x00	; 0
+ 1f8:	94 df       	rcall	.-216    	; 0x122 <Delay>
+ 1fa:	c2 df       	rcall	.-124    	; 0x180 <Initialization_GSM>
+ 1fc:	8a e8       	ldi	r24, 0x8A	; 138
+ 1fe:	90 e0       	ldi	r25, 0x00	; 0
+ 200:	45 df       	rcall	.-374    	; 0x8c <sendSMS>
+ 202:	81 e0       	ldi	r24, 0x01	; 1
+ 204:	80 93 dd 00 	sts	0x00DD, r24
+ 208:	53 98       	cbi	0x0a, 3	; 10
+ 20a:	c0 9a       	sbi	0x18, 0	; 24
+ 20c:	47 9a       	sbi	0x08, 7	; 8
+ 20e:	08 95       	ret
+
+00000210 <TMR2_init>:
+ 210:	82 b5       	in	r24, 0x22	; 34
+ 212:	88 60       	ori	r24, 0x08	; 8
+ 214:	82 bd       	out	0x22, r24	; 34
+ 216:	85 e0       	ldi	r24, 0x05	; 5
+ 218:	85 bd       	out	0x25, r24	; 37
+ 21a:	82 b5       	in	r24, 0x22	; 34
+ 21c:	90 e0       	ldi	r25, 0x00	; 0
+ 21e:	87 70       	andi	r24, 0x07	; 7
+ 220:	90 70       	andi	r25, 0x00	; 0
+ 222:	89 2b       	or	r24, r25
+ 224:	d1 f7       	brne	.-12     	; 0x21a <TMR2_init+0xa>
+ 226:	88 b7       	in	r24, 0x38	; 56
+ 228:	80 64       	ori	r24, 0x40	; 64
+ 22a:	88 bf       	out	0x38, r24	; 56
+ 22c:	89 b7       	in	r24, 0x39	; 57
+ 22e:	80 64       	ori	r24, 0x40	; 64
+ 230:	89 bf       	out	0x39, r24	; 57
+ 232:	08 95       	ret
+
+00000234 <__vector_4>:
+ 234:	1f 92       	push	r1
+ 236:	0f 92       	push	r0
+ 238:	0f b6       	in	r0, 0x3f	; 63
+ 23a:	0f 92       	push	r0
+ 23c:	11 24       	eor	r1, r1
+ 23e:	2f 93       	push	r18
+ 240:	3f 93       	push	r19
+ 242:	4f 93       	push	r20
+ 244:	5f 93       	push	r21
+ 246:	6f 93       	push	r22
+ 248:	7f 93       	push	r23
+ 24a:	8f 93       	push	r24
+ 24c:	9f 93       	push	r25
+ 24e:	af 93       	push	r26
+ 250:	bf 93       	push	r27
+ 252:	ef 93       	push	r30
+ 254:	ff 93       	push	r31
+ 256:	80 91 dd 00 	lds	r24, 0x00DD
+ 25a:	88 23       	and	r24, r24
+ 25c:	c1 f4       	brne	.+48     	; 0x28e <__vector_4+0x5a>
+ 25e:	80 91 da 00 	lds	r24, 0x00DA
+ 262:	8f 5f       	subi	r24, 0xFF	; 255
+ 264:	80 93 da 00 	sts	0x00DA, r24
+ 268:	80 91 da 00 	lds	r24, 0x00DA
+ 26c:	80 3f       	cpi	r24, 0xF0	; 240
+ 26e:	78 f0       	brcs	.+30     	; 0x28e <__vector_4+0x5a>
+ 270:	80 91 df 00 	lds	r24, 0x00DF
+ 274:	8f 5f       	subi	r24, 0xFF	; 255
+ 276:	80 93 df 00 	sts	0x00DF, r24
+ 27a:	80 91 df 00 	lds	r24, 0x00DF
+ 27e:	8c 33       	cpi	r24, 0x3C	; 60
+ 280:	18 f0       	brcs	.+6      	; 0x288 <__vector_4+0x54>
+ 282:	99 df       	rcall	.-206    	; 0x1b6 <CheckBattery>
+ 284:	10 92 df 00 	sts	0x00DF, r1
+ 288:	10 92 da 00 	sts	0x00DA, r1
+ 28c:	14 bc       	out	0x24, r1	; 36
+ 28e:	80 91 db 00 	lds	r24, 0x00DB
+ 292:	8f 5f       	subi	r24, 0xFF	; 255
+ 294:	80 93 db 00 	sts	0x00DB, r24
+ 298:	80 91 db 00 	lds	r24, 0x00DB
+ 29c:	90 91 de 00 	lds	r25, 0x00DE
+ 2a0:	8e 31       	cpi	r24, 0x1E	; 30
+ 2a2:	78 f0       	brcs	.+30     	; 0x2c2 <__vector_4+0x8e>
+ 2a4:	91 30       	cpi	r25, 0x01	; 1
+ 2a6:	69 f4       	brne	.+26     	; 0x2c2 <__vector_4+0x8e>
+ 2a8:	80 91 e0 00 	lds	r24, 0x00E0
+ 2ac:	8f 5f       	subi	r24, 0xFF	; 255
+ 2ae:	80 93 e0 00 	sts	0x00E0, r24
+ 2b2:	80 91 e0 00 	lds	r24, 0x00E0
+ 2b6:	8e 31       	cpi	r24, 0x1E	; 30
+ 2b8:	10 f0       	brcs	.+4      	; 0x2be <__vector_4+0x8a>
+ 2ba:	10 92 de 00 	sts	0x00DE, r1
+ 2be:	10 92 db 00 	sts	0x00DB, r1
+ 2c2:	ff 91       	pop	r31
+ 2c4:	ef 91       	pop	r30
+ 2c6:	bf 91       	pop	r27
+ 2c8:	af 91       	pop	r26
+ 2ca:	9f 91       	pop	r25
+ 2cc:	8f 91       	pop	r24
+ 2ce:	7f 91       	pop	r23
+ 2d0:	6f 91       	pop	r22
+ 2d2:	5f 91       	pop	r21
+ 2d4:	4f 91       	pop	r20
+ 2d6:	3f 91       	pop	r19
+ 2d8:	2f 91       	pop	r18
+ 2da:	0f 90       	pop	r0
+ 2dc:	0f be       	out	0x3f, r0	; 63
+ 2de:	0f 90       	pop	r0
+ 2e0:	1f 90       	pop	r1
+ 2e2:	18 95       	reti
+
+000002e4 <__vector_1>:
+ 2e4:	1f 92       	push	r1
+ 2e6:	0f 92       	push	r0
+ 2e8:	0f b6       	in	r0, 0x3f	; 63
+ 2ea:	0f 92       	push	r0
+ 2ec:	11 24       	eor	r1, r1
+ 2ee:	2f 93       	push	r18
+ 2f0:	3f 93       	push	r19
+ 2f2:	4f 93       	push	r20
+ 2f4:	5f 93       	push	r21
+ 2f6:	6f 93       	push	r22
+ 2f8:	7f 93       	push	r23
+ 2fa:	8f 93       	push	r24
+ 2fc:	9f 93       	push	r25
+ 2fe:	af 93       	push	r26
+ 300:	bf 93       	push	r27
+ 302:	ef 93       	push	r30
+ 304:	ff 93       	push	r31
+ 306:	80 91 de 00 	lds	r24, 0x00DE
+ 30a:	88 23       	and	r24, r24
+ 30c:	b1 f4       	brne	.+44     	; 0x33a <__vector_1+0x56>
+ 30e:	10 bc       	out	0x20, r1	; 32
+ 310:	8c e0       	ldi	r24, 0x0C	; 12
+ 312:	89 b9       	out	0x09, r24	; 9
+ 314:	88 e0       	ldi	r24, 0x08	; 8
+ 316:	8a b9       	out	0x0a, r24	; 10
+ 318:	86 e8       	ldi	r24, 0x86	; 134
+ 31a:	80 bd       	out	0x20, r24	; 32
+ 31c:	c0 98       	cbi	0x18, 0	; 24
+ 31e:	82 e0       	ldi	r24, 0x02	; 2
+ 320:	90 e0       	ldi	r25, 0x00	; 0
+ 322:	ff de       	rcall	.-514    	; 0x122 <Delay>
+ 324:	2d df       	rcall	.-422    	; 0x180 <Initialization_GSM>
+ 326:	89 ea       	ldi	r24, 0xA9	; 169
+ 328:	90 e0       	ldi	r25, 0x00	; 0
+ 32a:	b0 de       	rcall	.-672    	; 0x8c <sendSMS>
+ 32c:	81 e0       	ldi	r24, 0x01	; 1
+ 32e:	80 93 de 00 	sts	0x00DE, r24
+ 332:	10 92 db 00 	sts	0x00DB, r1
+ 336:	c0 9a       	sbi	0x18, 0	; 24
+ 338:	53 98       	cbi	0x0a, 3	; 10
+ 33a:	ff 91       	pop	r31
+ 33c:	ef 91       	pop	r30
+ 33e:	bf 91       	pop	r27
+ 340:	af 91       	pop	r26
+ 342:	9f 91       	pop	r25
+ 344:	8f 91       	pop	r24
+ 346:	7f 91       	pop	r23
+ 348:	6f 91       	pop	r22
+ 34a:	5f 91       	pop	r21
+ 34c:	4f 91       	pop	r20
+ 34e:	3f 91       	pop	r19
+ 350:	2f 91       	pop	r18
+ 352:	0f 90       	pop	r0
+ 354:	0f be       	out	0x3f, r0	; 63
+ 356:	0f 90       	pop	r0
+ 358:	1f 90       	pop	r1
+ 35a:	18 95       	reti
+
+0000035c <Go_to_sleep>:
+ 35c:	47 9a       	sbi	0x08, 7	; 8
+ 35e:	c0 9a       	sbi	0x18, 0	; 24
+ 360:	78 94       	sei
+ 362:	85 b7       	in	r24, 0x35	; 53
+ 364:	8f 78       	andi	r24, 0x8F	; 143
+ 366:	80 63       	ori	r24, 0x30	; 48
+ 368:	85 bf       	out	0x35, r24	; 53
+ 36a:	88 ea       	ldi	r24, 0xA8	; 168
+ 36c:	91 e6       	ldi	r25, 0x61	; 97
+ 36e:	01 97       	sbiw	r24, 0x01	; 1
+ 370:	f1 f7       	brne	.-4      	; 0x36e <Go_to_sleep+0x12>
+ 372:	85 b7       	in	r24, 0x35	; 53
+ 374:	80 68       	ori	r24, 0x80	; 128
+ 376:	85 bf       	out	0x35, r24	; 53
+ 378:	88 95       	sleep
+ 37a:	85 b7       	in	r24, 0x35	; 53
+ 37c:	8f 77       	andi	r24, 0x7F	; 127
+ 37e:	85 bf       	out	0x35, r24	; 53
+ 380:	8c e7       	ldi	r24, 0x7C	; 124
+ 382:	92 e9       	ldi	r25, 0x92	; 146
+ 384:	01 97       	sbiw	r24, 0x01	; 1
+ 386:	f1 f7       	brne	.-4      	; 0x384 <Go_to_sleep+0x28>
+ 388:	f8 94       	cli
+ 38a:	08 95       	ret
+
+0000038c <main>:
+ 38c:	8f ef       	ldi	r24, 0xFF	; 255
+ 38e:	88 bb       	out	0x18, r24	; 24
+ 390:	85 bb       	out	0x15, r24	; 21
+ 392:	8f e3       	ldi	r24, 0x3F	; 63
+ 394:	82 bb       	out	0x12, r24	; 18
+ 396:	b8 9a       	sbi	0x17, 0	; 23
+ 398:	c0 98       	cbi	0x18, 0	; 24
+ 39a:	b9 9a       	sbi	0x17, 1	; 23
+ 39c:	c1 9a       	sbi	0x18, 1	; 24
+ 39e:	80 e1       	ldi	r24, 0x10	; 16
+ 3a0:	97 e2       	ldi	r25, 0x27	; 39
+ 3a2:	22 e3       	ldi	r18, 0x32	; 50
+ 3a4:	30 e0       	ldi	r19, 0x00	; 0
+ 3a6:	f9 01       	movw	r30, r18
+ 3a8:	31 97       	sbiw	r30, 0x01	; 1
+ 3aa:	f1 f7       	brne	.-4      	; 0x3a8 <main+0x1c>
+ 3ac:	01 97       	sbiw	r24, 0x01	; 1
+ 3ae:	d9 f7       	brne	.-10     	; 0x3a6 <main+0x1a>
+ 3b0:	8a 98       	cbi	0x11, 2	; 17
+ 3b2:	92 9a       	sbi	0x12, 2	; 18
+ 3b4:	81 e0       	ldi	r24, 0x01	; 1
+ 3b6:	90 e0       	ldi	r25, 0x00	; 0
+ 3b8:	b4 de       	rcall	.-664    	; 0x122 <Delay>
+ 3ba:	87 e8       	ldi	r24, 0x87	; 135
+ 3bc:	86 b9       	out	0x06, r24	; 6
+ 3be:	86 b1       	in	r24, 0x06	; 6
+ 3c0:	80 93 e1 00 	sts	0x00E1, r24
+ 3c4:	85 ec       	ldi	r24, 0xC5	; 197
+ 3c6:	87 b9       	out	0x07, r24	; 7
+ 3c8:	8f ef       	ldi	r24, 0xFF	; 255
+ 3ca:	84 bb       	out	0x14, r24	; 20
+ 3cc:	a5 98       	cbi	0x14, 5	; 20
+ 3ce:	10 bc       	out	0x20, r1	; 32
+ 3d0:	8c e0       	ldi	r24, 0x0C	; 12
+ 3d2:	89 b9       	out	0x09, r24	; 9
+ 3d4:	88 e0       	ldi	r24, 0x08	; 8
+ 3d6:	8a b9       	out	0x0a, r24	; 10
+ 3d8:	86 e8       	ldi	r24, 0x86	; 134
+ 3da:	80 bd       	out	0x20, r24	; 32
+ 3dc:	81 ec       	ldi	r24, 0xC1	; 193
+ 3de:	90 e0       	ldi	r25, 0x00	; 0
+ 3e0:	4b de       	rcall	.-874    	; 0x78 <Send_clause>
+ 3e2:	ce de       	rcall	.-612    	; 0x180 <Initialization_GSM>
+ 3e4:	80 91 dd 00 	lds	r24, 0x00DD
+ 3e8:	88 23       	and	r24, r24
+ 3ea:	19 f4       	brne	.+6      	; 0x3f2 <main+0x66>
+ 3ec:	8f ec       	ldi	r24, 0xCF	; 207
+ 3ee:	90 e0       	ldi	r25, 0x00	; 0
+ 3f0:	4d de       	rcall	.-870    	; 0x8c <sendSMS>
+ 3f2:	80 e1       	ldi	r24, 0x10	; 16
+ 3f4:	97 e2       	ldi	r25, 0x27	; 39
+ 3f6:	22 e3       	ldi	r18, 0x32	; 50
+ 3f8:	30 e0       	ldi	r19, 0x00	; 0
+ 3fa:	f9 01       	movw	r30, r18
+ 3fc:	31 97       	sbiw	r30, 0x01	; 1
+ 3fe:	f1 f7       	brne	.-4      	; 0x3fc <main+0x70>
+ 400:	01 97       	sbiw	r24, 0x01	; 1
+ 402:	d9 f7       	brne	.-10     	; 0x3fa <main+0x6e>
+ 404:	53 98       	cbi	0x0a, 3	; 10
+ 406:	37 98       	cbi	0x06, 7	; 6
+ 408:	c0 9a       	sbi	0x18, 0	; 24
+ 40a:	8b b7       	in	r24, 0x3b	; 59
+ 40c:	80 64       	ori	r24, 0x40	; 64
+ 40e:	8b bf       	out	0x3b, r24	; 59
+ 410:	ff de       	rcall	.-514    	; 0x210 <TMR2_init>
+ 412:	78 94       	sei
+ 414:	a3 df       	rcall	.-186    	; 0x35c <Go_to_sleep>
+ 416:	fe cf       	rjmp	.-4      	; 0x414 <main+0x88>
+
+00000418 <_exit>:
+ 418:	f8 94       	cli
+
+0000041a <__stop_program>:
+ 41a:	ff cf       	rjmp	.-2      	; 0x41a <__stop_program>
