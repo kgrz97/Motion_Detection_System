@@ -16,5 +16,5 @@ When battery status is low, user receives a text message about the low battery s
 
 Device is prepared to work outside.
 
-Device to work need a sim card.
+Device needs a sim card to work properly.
 
